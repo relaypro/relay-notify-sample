@@ -25,18 +25,12 @@ export default createWorkflow(relay => {
     await relay.say(request_text)
     const request = await relay.listen()
     requests.push(request.text)
-    const options = {}
-    
-    options.priority = NotificationPriority.HIGH
-    options.title = `Title`
-    options.body = `Body`
-    options.sound = NotificationSound.DEFAULT
 
     log(JSON.stringify(options))
 
     await relay.say(`Sending your ${request_type} request for ${request.text} to available staff`) // Sending your request for to available staff
     if(request_type === 'pickup') {
-      await relay.alert('Pickup',`Please bring ${request.text} to the front!`, [`${targets}`], options)
+      await relay.alert('Pickup',`Please bring ${request.text} to the front!`, [`${targets}`],)
     }
     
        
