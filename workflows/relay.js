@@ -14,14 +14,14 @@ export default createWorkflow(relay => {
   relay.on(Event.START, async (msg) => {
     deviceName = await relay.getDeviceName()
     deviceId = await relay.getDeviceId()
-    const targets = relay.getVar('targets')
-    const request_text = relay.getVar('request_text')
-    const request_type = relay.getVar('request_type')
+    const targets = await relay.getVar('targets')
+    const request_text = await relay.getVar('request_text')
+    const request_type = await relay.getVar('request_type')
 
     //const notify_text = relay.getVar('notify_text')
     log(`Start event`)
     log(deviceId)
-    log(JSON.stringify(request_text))
+    log(request_text)
     await relay.say(request_text)
     const request = await relay.listen()
     requests.push(request.text)
