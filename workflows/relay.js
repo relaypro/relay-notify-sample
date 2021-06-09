@@ -6,7 +6,7 @@ const { Event, Taps, Button, createWorkflow, NotificationPriority, NotificationS
 
 export default createWorkflow(relay => {
   const workflowName = `Notify`
-  let deviceName, deviceId, targets
+  let deviceName, deviceId, targets, request_type
   function log(msg) {
     console.log(`[${workflowName}/${deviceId}/${deviceName}] ${msg}`)
   }
@@ -16,8 +16,9 @@ export default createWorkflow(relay => {
     deviceId = await relay.getDeviceId()
     targets = await relay.getVar('targets')
     const request_text = await relay.getVar('request_text')
-    const request_type = await relay.getVar('request_type')
-
+    request_type = await relay.getVar('request_type')
+    log(request_type)
+    log(targets)
     //const notify_text = relay.getVar('notify_text')
     log(`Start event`)
     log(deviceId)
@@ -28,8 +29,11 @@ export default createWorkflow(relay => {
 
     await relay.say(`Sending your ${request_type} request for ${request.text} to available staff`) // Sending your request for to available staff
     if(request_type === 'pickup') {
-      await relay.alert('Pickup',`Please bring ${request.text} to the front!`, [`${targets}`],)
+      await relay.alert(request_type,`Please bring ${request.text} to the front!`, [`${targets}`],)
+    } else if (request_type === 'go home') {
+      await relay.alert(request_type,`Please send ${request.text} home!`, [`${targets}`],)      
     }
+
     log('Completed notify')
   })
 
@@ -37,12 +41,15 @@ export default createWorkflow(relay => {
     log(`Got notification update: ${JSON.stringify(notificationEvent)}`)  
     if(notificationEvent.event === `ack_event`) {
       let current_request = requests.shift()
-      await relay.say(`${notificationEvent.source} is bringing ${current_request} to the front.`)
-      await relay.cancelAlert('Pickup', [`${targets}`])
-      await relay.broadcast(`You have accepted the current request. There are ${requests.length} requests pending.`, [`${notificationEvent.source}`])
+      if(notificationEvent.name === 'pickup') {
+        await relay.say(`${notificationEvent.source} is bringing ${current_request} to the front.`)
+      } else if (notificationEvent.name === 'go home') {
+        await relay.say(`${notificationEvent.source} is sending ${current_request} home.`)
+      }
+      await relay.cancelAlert(notificationEvent.name, [`${targets}`])
+      await relay.broadcast(`You have accepted the ${notificationEvent.name} request for ${current_request}.`, [`${notificationEvent.source}`])
       relay.terminate()
     }
-    
   })
 
   relay.on(Event.BUTTON, async (buttonEvent) => {
