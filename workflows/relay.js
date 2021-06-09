@@ -36,8 +36,8 @@ export default createWorkflow(relay => {
   relay.on(Event.NOTIFICATION, async (notificationEvent) => {
     log(`Got notification update: ${JSON.stringify(notificationEvent)}`)  
     if(notificationEvent.event === `ack_event`) {
-      requests.shift()
-      await relay.say(`${notificationEvent.source} is bringing your dog to the front.`)
+      let current_request = requests.shift()
+      await relay.say(`${notificationEvent.source} is bringing ${current_request} to the front.`)
       await relay.cancelAlert('Pickup', [`${targets}`])
       await relay.broadcast(`You have accepted the current request. There are ${requests.length} requests pending.`, [`${notificationEvent.source}`])
       relay.terminate()
