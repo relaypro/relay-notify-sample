@@ -22,10 +22,10 @@ export default createWorkflow(relay => {
     log(`Start event`)
     log(JSON.stringify(msg))
     log(deviceId)
-    requests = requests + 1
+    
     await relay.say(request_text)
     const request = await relay.listen()
-    
+    requests.push(request.text)
     const options = {}
     
     options.priority = NotificationPriority.HIGH
@@ -47,9 +47,9 @@ export default createWorkflow(relay => {
   relay.on(Event.NOTIFICATION, async (notificationEvent) => {
     log(`Got notification update: ${JSON.stringify(notificationEvent)}`)  
     if(notificationEvent.event === `ack_event`) {
-      requests = requests - 1
+      requests.shift()
       await relay.say(`${notificationEvent.source} is bringing your dog to the front.`)
-      await relay.broadcast(`You have accepted the current request. There are ${requests} requests pending.`, [`${notificationEvent.source}`])
+      await relay.broadcast(`You have accepted the current request. There are ${requests.length} requests pending.`, [`${notificationEvent.source}`])
       relay.terminate()
     }
     
