@@ -6,7 +6,7 @@ const { Event, Taps, Button, createWorkflow, NotificationPriority, NotificationS
 
 export default createWorkflow(relay => {
   const workflowName = `Notify`
-  let deviceName, deviceId
+  let deviceName, deviceId, targets
   function log(msg) {
     console.log(`[${workflowName}/${deviceId}/${deviceName}] ${msg}`)
   }
@@ -14,7 +14,7 @@ export default createWorkflow(relay => {
   relay.on(Event.START, async (msg) => {
     deviceName = await relay.getDeviceName()
     deviceId = await relay.getDeviceId()
-    const targets = await relay.getVar('targets')
+    targets = await relay.getVar('targets')
     const request_text = await relay.getVar('request_text')
     const request_type = await relay.getVar('request_type')
 
@@ -30,8 +30,6 @@ export default createWorkflow(relay => {
     if(request_type === 'pickup') {
       await relay.alert('Pickup',`Please bring ${request.text} to the front!`, [`${targets}`],)
     }
-    
-       
     log('Completed notify')
   })
 
@@ -40,7 +38,8 @@ export default createWorkflow(relay => {
     if(notificationEvent.event === `ack_event`) {
       requests.shift()
       await relay.say(`${notificationEvent.source} is bringing your dog to the front.`)
-      await relay.cancelAlert('Pickup', notificationEvent.targets)
+      log(notificationEvent.targets)
+      await relay.cancelAlert('Pickup', [`${notificationEvent.targets}`])
       await relay.broadcast(`You have accepted the current request. There are ${requests.length} requests pending.`, [`${notificationEvent.source}`])
       relay.terminate()
     }
