@@ -4,7 +4,7 @@ import express from 'express'
 
 const express1 = express()
 const port = process.env.PORT || 3000
-export let requests = 0
+export var requests = 0
 
 express1.use(express.json());
 express1.use(express.urlencoded({
