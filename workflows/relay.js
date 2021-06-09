@@ -20,9 +20,8 @@ export default createWorkflow(relay => {
 
     //const notify_text = relay.getVar('notify_text')
     log(`Start event`)
-    log(JSON.stringify(msg))
     log(deviceId)
-    
+    log(request_text)
     await relay.say(request_text)
     const request = await relay.listen()
     requests.push(request.text)
