@@ -19,7 +19,6 @@ export default createWorkflow(relay => {
     request_type = await relay.getVar('request_type')
     log(request_type)
     log(targets)
-    //const notify_text = relay.getVar('notify_text')
     log(`Start event`)
     log(deviceId)
     log(request_text)
@@ -29,9 +28,9 @@ export default createWorkflow(relay => {
 
     await relay.say(`Sending your ${request_type} request for ${request.text} to available staff`) // Sending your request for to available staff
     if(request_type === 'pickup') {
-      await relay.alert(request_type,`Please bring ${request.text} to the front!`, [`${targets}`],)
+      await relay.notify(request_type,`Please bring ${request.text} to the front!`, [`${targets}`],) //rover is here for drop off 
     } else if (request_type === 'go home') {
-      await relay.alert(request_type,`Please send ${request.text} home!`, [`${targets}`],)      
+      await relay.alert(request_type,`Please send ${request.text} home!`, [`${targets}`],)      // drop off rover daycare is here
     }
 
     log('Completed notify')
