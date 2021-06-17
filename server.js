@@ -3,16 +3,17 @@ import notify from './workflows/notify.js'
 import page from './workflows/page.js'
 import express from 'express'
 import querystring from 'querystring'
+import axios from 'axios'
 
 
 const express1 = express()
 const port = process.env.PORT || 3000
 export const requests = []
 const ibot = 'https://all-api-qa-ibot.nocell.io'
-const workflow = '/ibot/workflow/wf_page_nurse_zTc3PwRahGlWl3HV2UQj0B' //TODO
+const workflow = '/ibot/workflow/wf_nurserequest_YvvdPBW3B02suz1n7C39COA' 
 const auth_endpoint = `https://auth.republicdev.info/oauth2/token`
-const sub_id = 'cd11920e-140a-4f3d-869d-e7bba0d24c72'
-const user_id = 'VIRT1aq4dw2PkyLkI5efJpg6nF'
+const sub_id = process.env.SUB_ID
+const user_id = process.env.USER_ID
 
 const params = querystring.stringify({
   'subscriber_id': sub_id,
@@ -29,15 +30,15 @@ express1.post('/nurse_request', async (req, res) => {
   //console.log(req)
   let payload = req.body
   console.log(payload)
-/*
-  console.log(payload)
+  console.log(req.body.target)
+
   let auth_header = await auth()
   try { 
     const response = await axios.post(`${ibot}${workflow}?${params}`,
     {
       "action": "invoke",
       "action_args": {
-         "notify_device": payload.nurse_device,
+         "targets": payload.target,
          "room": payload.room
         }
     },
@@ -52,8 +53,6 @@ express1.post('/nurse_request', async (req, res) => {
   } catch (e) {
     console.error(e)
   }
-
-*/
   res.send('Recieved')
 })
 
@@ -73,8 +72,8 @@ async function auth() {
     const response = await axios.post(auth_endpoint, 
       querystring.stringify({
         'grant_type': 'password',
-        'client_id': '26NPNHUC',
-        'client_secret': 'QM6mLXxTQGH26B52',
+        'client_id': process.env.CLIENT_ID,
+        'client_secret': process.env.CLIENT_SECRET,
         'username': process.env.DEMO_ACCOUNT,
         'password': process.env.DEMO_PASSWORD
       }),

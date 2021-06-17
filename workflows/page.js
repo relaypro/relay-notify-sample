@@ -5,39 +5,33 @@ const { Event, Taps, Button, createWorkflow, NotificationPriority, NotificationS
 export default createWorkflow(relay => {
   const workflowName = `Page_nurse`
   let deviceName, deviceId, targets, room
+
   function log(msg) {
     console.log(`[${workflowName}/${deviceId}/${deviceName}] ${msg}`)
   }
 
   relay.on(Event.START, async (msg) => {
+    log(`Started ${workflowName} workflow`)
+
     deviceName = await relay.getDeviceName()
     deviceId = await relay.getDeviceId()
-    targets = await relay.getVar('nurse_device')
+    targets = await relay.getVar('targets') // Nurse Relay Device or Relay Channel name
     room = await relay.getVar('room')
-    log(targets)
 
-    await relay.alert(request_type,`New request from ${room}`, [`${targets}`],) 
-    log('Completed alert')
+    // alert params: alert(name: string, text: string, target: string[])
+    await relay.alert(room,`New request from ${room}`, [`${targets}`],)
+    //await relay.broadcast(request_type,`New request from ${room}`, [`${targets}`] ) 
+    log(`Completed ${workflowName} workflow`)
   })
 
   relay.on(Event.NOTIFICATION, async (notificationEvent) => {
-    log(`Got notification update: ${JSON.stringify(notificationEvent)}`)  
-    // Any confirmation action you want to send back
-    relay.terminate()
-  })
-
-  relay.on(Event.BUTTON, async (buttonEvent) => {
-    log(`Button Event`)
-    log(buttonEvent.taps)
-    log(buttonEvent.button)
-    if (buttonEvent.button === Button.ACTION) {
-      log(`action `)
-      if (buttonEvent.taps === Taps.SINGLE) {
-        log(`single `)
-        } else if (buttonEvent.taps === Taps.DOUBLE) { 
-        await relay.say(`Goodbye`)        
+    log(`Got notification update: ${JSON.stringify(notificationEvent)}`) 
+    if(notificationEvent.event === `ack_event`) {
+        await relay.broadcast(`You have accepted the request for ${notificationEvent.name}`,[`${notificationEvent.source}`])
+        await relay.cancelAlert(room) 
+        // Any confirmation action you want to send back
         await relay.terminate()
-      }
     }
   })
+
 })
