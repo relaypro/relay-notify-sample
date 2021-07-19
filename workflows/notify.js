@@ -28,8 +28,8 @@ export default createWorkflow(relay => {
 
     await relay.say(`Sending your ${request_type} request for ${request.text} to available staff`) // Sending your request for to available staff
     if(request_type === 'pickup') {
-      await relay.notify(request_type,`Please bring ${request.text} to the front!`, [`${targets}`],) //rover is here for drop off 
-    } else if (request_type === 'go home') {
+      await relay.alert(request_type,`Please bring ${request.text} to the front!`, [`${targets}`],) //rover is here for drop off 
+    } else if (request_type === 'drop') {
       await relay.alert(request_type,`Please send ${request.text} home!`, [`${targets}`],)      // drop off rover daycare is here
     }
 
@@ -42,7 +42,7 @@ export default createWorkflow(relay => {
       let current_request = requests.shift()
       if(notificationEvent.name === 'pickup') {
         await relay.say(`${notificationEvent.source} is bringing ${current_request} to the front.`)
-      } else if (notificationEvent.name === 'go home') {
+      } else if (notificationEvent.name === 'drop') {
         await relay.say(`${notificationEvent.source} is sending ${current_request} home.`)
       }
       await relay.cancelAlert(notificationEvent.name, [`${targets}`])
