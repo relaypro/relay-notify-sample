@@ -22,6 +22,7 @@ const createApp = (relay) => {
             if (button.taps === `single`) {
                 await relay.say('sending ETA update to Hiawatha Community Hospital')
                 emitterDispatch.emit(`launch`, `5`)
+                await relay.terminate()
             }
         }
     })

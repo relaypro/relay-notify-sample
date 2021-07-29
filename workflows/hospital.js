@@ -23,6 +23,7 @@ const createApp = (relay) => {
 
     emitterDispatch.on(`update`, async (eta) => {
         await relay.say(`LifeStar Lawrence will arrive at your location in 5 minutes. LifeStar Lawrence arriving in 5 minutes.`)
+        await relay.terminate()
     })
 
     relay.on(Event.NOTIFICATION, async (notificationEvent) => {
