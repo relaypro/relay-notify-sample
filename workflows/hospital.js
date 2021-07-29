@@ -33,7 +33,7 @@ const createApp = (relay) => {
         console.log("got event notification ack")
         await relay.breathe(`00FF00`)
         await relay.say(`LifeStar Lawrence has accepted this flight, ETA is 25 minutes.`)
-        await relay.broadcast('accept_request', `Successfully acknowledged Hiawatha Community Hospital's request`, notificationEvent.source)
+        await relay.broadcast('accept_request', `Successfully acknowledged Hiawatha Community Hospital's request`, [`${notificationEvent.source}`])
     })
 }
 
