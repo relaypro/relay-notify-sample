@@ -1,6 +1,8 @@
 import { relay } from '@relaypro/sdk'
 import notify from './workflows/notify.js'
 import page from './workflows/page.js'
+import hospital from './workflows/hospital.js'
+import dispatch from './workflows/dispatch.js'
 import express from 'express'
 import querystring from 'querystring'
 import axios from 'axios'
@@ -64,7 +66,9 @@ const server = express1.listen(port, () => {
 const app = relay({server})
 
 app.workflow(`notify`, notify)
-app.workflow(`page_nurse`,page)
+app.workflow(`page_nurse`, page)
+app.workflow(`hospital`, hospital)
+app.workflow(`dispatch`, dispatch)
 
 
 async function auth() {
