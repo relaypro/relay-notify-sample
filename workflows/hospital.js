@@ -15,6 +15,7 @@ const createApp = (relay) => {
         await relay.say(`Your request for an immediate helicopter launch to Hiawatha Community Hospital has been
         received in the dispatch center. Please standby for aircraft assignment and ETA`)
         console.log(process.env.DISPATCH)
+        await relay.switchAllLedOff()
         await relay.alert('new_request', 'LifeStar requested at Hiawatha Community Hospital in Hiawatha, Kansas', process.env.DISPATCH)
         console.log("hospital :after alert")
     })
