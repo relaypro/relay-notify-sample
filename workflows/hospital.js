@@ -14,7 +14,9 @@ const createApp = (relay) => {
         await relay.rotate(`FFA500`)
         await relay.say(`Your request for an immediate helicopter launch to Hiawatha Community Hospital has been
         received in the dispatch center. Please standby for aircraft assignment and ETA`)
+        console.log(process.env.DISPATCH)
         await relay.alert('new_request', 'LifeStar requested at Hiawatha Community Hospital in Hiawatha, Kansas', process.env.DISPATCH)
+        console.log("hospital :after alert")
     })
 
     emitterDispatch.on(`launch`, async (eta) => {
@@ -27,6 +29,7 @@ const createApp = (relay) => {
     })
 
     relay.on(Event.NOTIFICATION, async (notificationEvent) => {
+        console.log("got event notification ack")
         await relay.breathe(`00FF00`)
         await relay.say(`LifeStar Lawrence has accepted this flight, ETA is 25 minutes.`)
         await relay.broadcast('accept_request', `Successfully acknowledged Hiawatha Community Hospital's request`, notificationEvent.source)

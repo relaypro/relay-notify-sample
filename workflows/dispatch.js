@@ -12,7 +12,9 @@ const createApp = (relay) => {
         await relay.flash(`FFA500`) //on initiation of workflow, start flashing LEDs orange
         await relay.say('Launching helicopter. Sending notification to Hiawatha Community Hospital')
         await relay.rotate(`00FF00`)
+        console.log("dispatch: before emit")
         emitterDispatch.emit(`dispatch`, `20`)
+        console.log("dispatch: after emit")
     })
 
     relay.on(`button`, async (button, taps) => {
