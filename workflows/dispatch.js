@@ -13,7 +13,7 @@ const createApp = (relay) => {
         await relay.say('Launching helicopter. Sending notification to Hiawatha Community Hospital')
         await relay.rotate(`00FF00`)
         console.log("dispatch: before emit")
-        emitterDispatch.emit(`dispatch`, `20`)
+        emitterDispatch.emit(`launch`, `20`)
         console.log("dispatch: after emit")
     })
 
@@ -23,7 +23,7 @@ const createApp = (relay) => {
         if (button.button === `action`) {
             if (button.taps === `single`) {
                 await relay.say('sending ETA update to Hiawatha Community Hospital')
-                emitterDispatch.emit(`launch`, `5`)
+                emitterDispatch.emit(`update`, `5`)
                 await relay.terminate()
             }
         }
