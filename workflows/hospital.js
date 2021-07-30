@@ -21,6 +21,7 @@ const createApp = (relay) => {
 
     emitterDispatch.on(`launch`, async (eta) => {
         console.log()
+        await relay.breathe(`00FF00`)
         await relay.say(`LifeStar Lawrence is wheels up, enroute to your location, ETA is ${eta} min`)
     })
 
@@ -31,7 +32,7 @@ const createApp = (relay) => {
 
     relay.on(Event.NOTIFICATION, async (notificationEvent) => {
         console.log("got event notification ack")
-        await relay.breathe(`00FF00`)
+        await relay.rotate(`00FF00`)
         await relay.say(`LifeStar Lawrence has accepted this flight, ETA is 25 minutes.`)
         await relay.broadcast('accept_request', `Successfully acknowledged Hiawatha Community Hospital's request`, [`${notificationEvent.source}`])
     })
