@@ -27,8 +27,8 @@ const createApp = (relay) => {
                 await relay.say('sending ETA update to Hiawatha Community Hospital')
                 setTimeout(async () => {  
                     emitterDispatch.emit(`update`, `5`); 
+                    await relay.terminate();
                 }, 6000)
-                await relay.terminate()
             }
         }
     })

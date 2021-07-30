@@ -38,7 +38,7 @@ const createApp = (relay) => {
         await relay.broadcast('accept_request', `Successfully acknowledged Hiawatha Community Hospital's request`, [`${notificationEvent.source}`])
         setTimeout(async () => {  
             await relay.say(`LifeStar Lawrence has accepted this flight, ETA is 25 minutes.`);
-        }, 10000)
+        }, 7000)
     })
 }
 
