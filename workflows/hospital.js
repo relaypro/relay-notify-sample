@@ -11,13 +11,14 @@ const createApp = (relay) => {
     relay.on(`start`, async () => {
         await relay.flash(`FFA500`) //on initiation of workflow, start flashing LEDs orange
         await relay.say('You are requesting a LifeStar helicopter to Hiawatha Community Hospital in Hiawatha, Kansas. Standby while we send your request.')
-        setTimeout(() => {  console.log("delay part 1"); }, 10000)
-        await relay.rotate(`FFA500`)
+        setTimeout(() => {  
+            await relay.alert('new_request', 'LifeStar requested at Hiawatha Community Hospital in Hiawatha, Kansas', [`${process.env.DISPATCH}`]); 
+            await relay.rotate(`FFA500`);
+        }, 10000)
         //await relay.say(`Your request for an immediate helicopter launch to Hiawatha Community Hospital has been
         //received in the dispatch center. Please standby for aircraft assignment and ETA`)
-        await console.log(process.env.DISPATCH)
-        await relay.alert('new_request', 'LifeStar requested at Hiawatha Community Hospital in Hiawatha, Kansas', [`${process.env.DISPATCH}`])
-        await console.log("hospital :after alert")
+        //await console.log(process.env.DISPATCH)
+        //await console.log("hospital :after alert")
     })
 
     emitterDispatch.on(`launch`, async (eta) => {
@@ -35,8 +36,9 @@ const createApp = (relay) => {
         console.log("got event notification ack")
         await relay.rotate(`00FF00`)
         await relay.broadcast('accept_request', `Successfully acknowledged Hiawatha Community Hospital's request`, [`${notificationEvent.source}`])
-        setTimeout(() => {  console.log("delay part 2"); }, 10000)
-        await relay.say(`LifeStar Lawrence has accepted this flight, ETA is 25 minutes.`)
+        setTimeout(() => {  
+            await relay.say(`LifeStar Lawrence has accepted this flight, ETA is 25 minutes.`);
+        }, 10000)
     })
 }
 
