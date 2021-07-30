@@ -11,7 +11,7 @@ const createApp = (relay) => {
     relay.on(`start`, async () => {
         await relay.flash(`FFA500`) //on initiation of workflow, start flashing LEDs orange
         await relay.say('You are requesting a LifeStar helicopter to Hiawatha Community Hospital in Hiawatha, Kansas. Standby while we send your request.')
-        setTimeout(() => {  
+        setTimeout(async () => {  
             await relay.alert('new_request', 'LifeStar requested at Hiawatha Community Hospital in Hiawatha, Kansas', [`${process.env.DISPATCH}`]); 
             await relay.rotate(`FFA500`);
         }, 10000)
@@ -36,7 +36,7 @@ const createApp = (relay) => {
         console.log("got event notification ack")
         await relay.rotate(`00FF00`)
         await relay.broadcast('accept_request', `Successfully acknowledged Hiawatha Community Hospital's request`, [`${notificationEvent.source}`])
-        setTimeout(() => {  
+        setTimeout(async () => {  
             await relay.say(`LifeStar Lawrence has accepted this flight, ETA is 25 minutes.`);
         }, 10000)
     })
