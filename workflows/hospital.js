@@ -42,6 +42,7 @@ const createApp = (relay) => {
 
     emitterDispatch.on(`launch`, async (eta) => {
         console.log()
+        send_text('LifeStar Lawrence is wheels up, enroute to Hiawatha Community Hospital', to_number)
         await relay.breathe(`00FF00`)
         await relay.say(`LifeStar Lawrence is wheels up, enroute to your location, ETA is ${eta} min`)
     })
