@@ -1,11 +1,29 @@
 import axios from 'axios'
 import dotenv from 'dotenv'
 import pkg from '@relaypro/sdk'
+import twilio from 'twilio'
 const { Event, Taps, Button, createWorkflow, NotificationPriority, NotificationSound } = pkg
 import {EventEmitter} from "events"
 import {emitterDispatch} from './dispatch.js'
 export const emitterHospital = new EventEmitter()
 dotenv.config()
+
+const accountSid = process.env.ACCOUNT_SID
+const authToken = process.env.AUTH_TOKEN
+const from_number = process.env.FROM_NUMBER
+const to_number = process.env.TO_NUMBER
+
+const client = new twilio(accountSid, authToken)
+function send_text(message, to_number){
+    console.log("WITHIN SEND TEXT FUNCTION")
+    client.messages
+        .create({
+            body: message,
+            from: from_number,
+            to: to_number
+            })
+        .then(message => console.log(message.sid));
+}
 
 const createApp = (relay) => {
     relay.on(`start`, async () => {
@@ -15,6 +33,7 @@ const createApp = (relay) => {
             await relay.alert('new_request', 'LifeStar requested at Hiawatha Community Hospital in Hiawatha, Kansas', [`${process.env.DISPATCH}`]); 
             await relay.rotate(`FFA500`);
         }, 10000)
+        await send_text('helicopter requested at Hiawatha Community Hospital in Hiawatha, Kansas', to_number)
         //await relay.say(`Your request for an immediate helicopter launch to Hiawatha Community Hospital has been
         //received in the dispatch center. Please standby for aircraft assignment and ETA`)
         //await console.log(process.env.DISPATCH)
