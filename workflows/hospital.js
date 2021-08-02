@@ -12,6 +12,7 @@ const accountSid = process.env.ACCOUNT_SID
 const authToken = process.env.AUTH_TOKEN
 const from_number = process.env.FROM_NUMBER
 const to_number = process.env.TO_NUMBER
+const to_number2 = process.env.TO_NUMBER2
 
 const client = new twilio(accountSid, authToken)
 function send_text(message, to_number){
@@ -34,6 +35,7 @@ const createApp = (relay) => {
             await relay.rotate(`FFA500`);
         }, 10000)
         await send_text('helicopter requested at Hiawatha Community Hospital in Hiawatha, Kansas', to_number)
+        await send_text('helicopter requested at Hiawatha Community Hospital in Hiawatha, Kansas', to_number2)
         //await relay.say(`Your request for an immediate helicopter launch to Hiawatha Community Hospital has been
         //received in the dispatch center. Please standby for aircraft assignment and ETA`)
         //await console.log(process.env.DISPATCH)
@@ -43,6 +45,7 @@ const createApp = (relay) => {
     emitterDispatch.on(`launch`, async (eta) => {
         console.log()
         send_text('LifeStar Lawrence is wheels up, enroute to Hiawatha Community Hospital', to_number)
+        send_text('LifeStar Lawrence is wheels up, enroute to Hiawatha Community Hospital', to_number2)
         await relay.breathe(`00FF00`)
         await relay.say(`LifeStar Lawrence is wheels up, enroute to your location, ETA is ${eta} min`)
     })
